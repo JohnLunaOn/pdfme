@@ -1,0 +1,15 @@
+{
+    # Global options
+    admin off
+    auto_https off
+}
+
+# Main website domain
+pdfme.me {
+    reverse_proxy pdfme:3000
+}
+
+# API domain (if needed)
+api.pdfme.me {
+    reverse_proxy pdfme:3000
+} 

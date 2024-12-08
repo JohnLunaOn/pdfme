@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - pdfme_network
+    depends_on:
+      - pdfme
+
+  pdfme:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    expose:
+      - "3000"
+    volumes:
+      - ..:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    restart: unless-stopped
+    networks:
+      - pdfme_network
+
+networks:
+  pdfme_network:
+    driver: bridge 
